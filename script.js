@@ -794,8 +794,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modalVisualInitial) modalVisualInitial.textContent = initial;
         if (modalDemoBtn) {
             modalDemoBtn.href = demo;
-            // Hide demo button when link is just a placeholder
-            if (demo === '#') {
+            // Hide demo button when no live URL is available
+            if (!demo) {
                 modalDemoBtn.setAttribute('hidden', '');
             } else {
                 modalDemoBtn.removeAttribute('hidden');
