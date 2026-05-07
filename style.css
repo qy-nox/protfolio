@@ -350,7 +350,8 @@ body.dark-mode .navbar.scrolled {
 body.dark-mode .dropdown-menu {
     background: rgba(28, 27, 25, 0.9);
 }
-.dropdown:hover .dropdown-menu {
+.dropdown:hover .dropdown-menu,
+.dropdown.open .dropdown-menu {
     opacity: 1; visibility: visible;
     transform: translateY(0) scale(1);
 }
@@ -1566,7 +1567,7 @@ main {
     .section { padding: 6rem 0; }
     .cursor-dot, .cursor-ring, .aura-cursor { display: none; }
     * { cursor: auto !important; }
-    .btn, .magnetic, .project-visual, .audio-btn, #theme-toggle, .dropdown-toggle, .social-link, .project-link, .diary-prev, .diary-next { cursor: pointer !important; }
+    .btn, .magnetic, .project-visual, .audio-btn, #theme-toggle, .unique-menu-btn, .social-link, .project-link, .diary-prev, .diary-next, button.project-view, .open-modal-btn, .modal-close-btn { cursor: pointer !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1834,8 +1835,243 @@ main {
 
 
 /* ============================================
-   CYBER SECURITY VISUAL DIARY
+   HERO ANIMATED SVG BACKGROUND
    ============================================ */
+.hero-svg-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* ============================================
+   PROJECT MODAL
+   ============================================ */
+.project-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 26, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 8000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease-out-expo), visibility 0.4s;
+}
+body.dark-mode .project-modal-overlay {
+    background: rgba(10, 10, 10, 0.65);
+}
+.project-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+.project-modal-panel {
+    position: relative;
+    background: var(--bg-main);
+    border: 1px solid var(--border-strong);
+    border-radius: 24px;
+    max-width: 680px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    transform: scale(0.88) translateY(24px);
+    transition: transform 0.45s var(--ease-out-expo);
+    /* Glassmorphic tint */
+    background: rgba(247, 243, 238, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+body.dark-mode .project-modal-panel {
+    background: rgba(22, 21, 20, 0.92);
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.project-modal-overlay.is-open .project-modal-panel {
+    transform: scale(1) translateY(0);
+}
+.modal-close-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s var(--ease-out-expo);
+    cursor: pointer;
+}
+.modal-close-btn:hover {
+    background: var(--text-main);
+    color: var(--bg-main);
+    border-color: var(--text-main);
+    transform: rotate(90deg) scale(1.08);
+}
+.modal-visual-wrap {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+}
+.modal-visual-bg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.8s var(--ease-out-expo);
+}
+.project-modal-overlay.is-open .modal-visual-bg {
+    transform: scale(1);
+}
+.modal-visual-initial {
+    font-family: var(--font-heading);
+    font-size: 9rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.28);
+    font-weight: 300;
+    line-height: 1;
+    user-select: none;
+}
+.modal-body {
+    padding: 2rem 2.25rem 2.25rem;
+}
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+}
+.modal-desc {
+    font-size: 0.975rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+.modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+}
+.modal-tag {
+    padding: 0.35rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    background: transparent;
+    transition: all 0.3s var(--ease-out-expo);
+}
+.modal-tag:hover {
+    background: var(--text-main);
+    color: var(--bg-main);
+    border-color: var(--text-main);
+}
+.modal-demo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   ACCESSIBLE FOCUS STYLES
+   ============================================ */
+:focus-visible {
+    outline: 2px solid var(--accent-terracotta);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+.modal-close-btn:focus-visible {
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+.project-view:focus-visible,
+.project-link.open-modal-btn:focus-visible,
+.open-modal-btn:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 3px;
+}
+.dropdown-item:focus-visible {
+    outline: 2px solid var(--accent-terracotta);
+    outline-offset: -2px;
+    border-radius: 2px;
+}
+
+/* open-modal-btn as button (project-link override) */
+button.project-link {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.15rem;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    color: var(--text-main);
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    padding: 0;
+}
+button.project-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent-terracotta);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease-out-expo);
+}
+button.project-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+button.project-view {
+    color: #fff;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 100px;
+    background: transparent;
+    transform: translateY(10px);
+    transition: transform 0.5s var(--ease-out-expo), background 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+button.project-view:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+.project-card:hover button.project-view {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .project-modal-panel {
+        border-radius: 16px;
+    }
+    .modal-visual-wrap { height: 160px; }
+    .modal-body { padding: 1.5rem; }
+    .modal-title { font-size: 1.5rem; }
+}
+
 
 #matrix-canvas {
     position: absolute;
