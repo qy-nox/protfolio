@@ -885,4 +885,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalCloseBtn) {
         modalCloseBtn.addEventListener('click', closeProjectModal);
     }
+
+    // ============================================
+    // LAMPPOST CLOCK
+    // ============================================
+    const timeEl = document.getElementById('real-time');
+    const dateEl = document.getElementById('real-date');
+
+    function updateClock() {
+        if (!timeEl || !dateEl) return;
+        const now = new Date();
+        timeEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        dateEl.textContent = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    
+    if (timeEl && dateEl) {
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
 });
