@@ -1936,7 +1936,7 @@ body.dark-mode .project-modal-panel {
 }
 .modal-visual-initial {
     font-family: var(--font-heading);
-    font-size: 9rem;
+    font-size: clamp(5rem, 12vw, 9rem);
     font-style: italic;
     color: rgba(255, 255, 255, 0.28);
     font-weight: 300;

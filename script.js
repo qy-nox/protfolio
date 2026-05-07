@@ -13,9 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // PREFERS-REDUCED-MOTION: pause SVG animations
     // ============================================
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('.hero-svg-bg animate').forEach(el => {
-            el.setAttribute('dur', '0s');
-        });
+        const heroSvg = document.querySelector('.hero-svg-bg');
+        if (heroSvg && typeof heroSvg.pauseAnimations === 'function') {
+            heroSvg.pauseAnimations();
+        }
     }
 
     // ============================================
@@ -794,7 +795,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modalDemoBtn) {
             modalDemoBtn.href = demo;
             // Hide demo button when link is just a placeholder
-            modalDemoBtn.style.display = demo === '#' ? 'none' : 'inline-flex';
+            if (demo === '#') {
+                modalDemoBtn.setAttribute('hidden', '');
+            } else {
+                modalDemoBtn.removeAttribute('hidden');
+            }
         }
         if (modalTags) {
             modalTags.innerHTML = '';
