@@ -73,11 +73,12 @@
             </a>
             <div class="nav-links">
                 <div class="dropdown">
-                    <button class="unique-menu-btn" aria-haspopup="true">
+                    <button class="unique-menu-btn" aria-haspopup="true" aria-expanded="false"
+                        aria-controls="dropdown-menu-list" id="nav-explore-btn">
                         <span class="btn-dots"><i></i><i></i><i></i></span>
                         <span class="nav-link-text">Explore</span>
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" id="dropdown-menu-list" aria-label="Navigation links">
                         <a href="#about" class="dropdown-item">about</a>
                         <a href="#now" class="dropdown-item">now</a>
                         <a href="#education" class="dropdown-item">journey</a>
@@ -111,10 +112,109 @@
         </div>
     </nav>
 
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="project-modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="modal-title" aria-hidden="true">
+        <div class="project-modal-panel">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close project details">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="modal-visual-wrap">
+                <div class="modal-visual-bg" id="modal-visual-bg">
+                    <span class="modal-visual-initial" id="modal-visual-initial" aria-hidden="true"></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modal-title"></h2>
+                <p class="modal-desc" id="modal-desc"></p>
+                <div class="modal-tags" id="modal-tags" aria-label="Project tags"></div>
+                <a href="" class="btn primary modal-demo-btn" id="modal-demo-btn" target="_blank"
+                    rel="noopener noreferrer" hidden>
+                    View Demo
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                        <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <main>
         <!-- Intro / Hero with Ken Burns Slideshow -->
         <section id="intro" class="section fullscreen">
             <canvas id="flow-canvas"></canvas>
+            <!-- Animated SVG Background -->
+            <svg class="hero-svg-bg" aria-hidden="true" viewBox="0 0 1440 900"
+                preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="hsg1" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#C75B39" stop-opacity="0.18" />
+                        <stop offset="100%" stop-color="#C75B39" stop-opacity="0" />
+                    </radialGradient>
+                    <radialGradient id="hsg2" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#4A5D54" stop-opacity="0.15" />
+                        <stop offset="100%" stop-color="#4A5D54" stop-opacity="0" />
+                    </radialGradient>
+                    <radialGradient id="hsg3" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#7A6B7D" stop-opacity="0.12" />
+                        <stop offset="100%" stop-color="#7A6B7D" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+                <!-- Animated blob shapes -->
+                <circle cx="200" cy="250" r="260" fill="url(#hsg1)">
+                    <animate attributeName="cx" values="200;250;170;200" dur="18s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="250;300;220;250" dur="22s" repeatCount="indefinite" />
+                    <animate attributeName="r" values="260;300;240;260" dur="15s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="1200" cy="200" r="220" fill="url(#hsg2)">
+                    <animate attributeName="cx" values="1200;1150;1230;1200" dur="20s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="200;260;170;200" dur="25s" repeatCount="indefinite" />
+                    <animate attributeName="r" values="220;260;195;220" dur="18s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="700" cy="700" r="200" fill="url(#hsg3)">
+                    <animate attributeName="cx" values="700;750;660;700" dur="22s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="700;650;740;700" dur="18s" repeatCount="indefinite" />
+                    <animate attributeName="r" values="200;230;175;200" dur="20s" repeatCount="indefinite" />
+                </circle>
+                <!-- Geometric accent lines -->
+                <line x1="0" y1="0" x2="420" y2="310" stroke="rgba(199,91,57,0.07)" stroke-width="1">
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="9s" repeatCount="indefinite" />
+                </line>
+                <line x1="1440" y1="0" x2="980" y2="420" stroke="rgba(74,93,84,0.06)" stroke-width="1">
+                    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="11s" repeatCount="indefinite" />
+                </line>
+                <line x1="720" y1="0" x2="720" y2="900" stroke="rgba(122,107,125,0.04)" stroke-width="1">
+                    <animate attributeName="opacity" values="0.1;0.4;0.1" dur="13s" repeatCount="indefinite" />
+                </line>
+                <!-- Floating dots -->
+                <circle cx="350" cy="80" r="3" fill="rgba(199,91,57,0.2)">
+                    <animate attributeName="cy" values="80;58;80" dur="6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.3;0.9;0.3" dur="6s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="1100" cy="500" r="4" fill="rgba(74,93,84,0.2)">
+                    <animate attributeName="cy" values="500;478;500" dur="8s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.2;0.7;0.2" dur="8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="150" cy="700" r="2.5" fill="rgba(199,91,57,0.25)">
+                    <animate attributeName="cy" values="700;722;700" dur="7s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="7s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="900" cy="120" r="3.5" fill="rgba(122,107,125,0.2)">
+                    <animate attributeName="cy" values="120;98;120" dur="9s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="9s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="540" cy="450" r="2" fill="rgba(199,91,57,0.15)">
+                    <animate attributeName="cx" values="540;560;540" dur="10s" repeatCount="indefinite" />
+                    <animate attributeName="cy" values="450;430;450" dur="10s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.2;0.6;0.2" dur="10s" repeatCount="indefinite" />
+                </circle>
+            </svg>
             <div class="hero-slideshow">
                 <div class="slide active"
                     style="background-image: url('https://images.unsplash.com/photo-1518173946687-a4c036bc3c95?w=1920&q=80')">
@@ -405,53 +505,77 @@
             <div class="container">
                 <h2 class="section-title" data-scramble>Selected Works</h2>
                 <div class="projects-grid">
-                    <div class="project-card" data-tilt data-reveal="up">
+                    <div class="project-card" data-tilt data-reveal="up"
+                        data-project-title="Data Entry Portfolio"
+                        data-project-desc="A curated collection of data management, spreadsheet automation, and office workflow projects. Covers data cleaning, Excel macros, and structured reporting."
+                        data-project-tags="Data Entry,MS Office,Spreadsheets,Automation,Reporting"
+                        data-project-color="linear-gradient(135deg, #C75B39 0%, #D4A574 100%)"
+                        data-project-initial="D"
+                        data-project-demo="">
                         <div class="project-visual">
                             <div class="project-bg"
                                 style="background: linear-gradient(135deg, #C75B39 0%, #D4A574 100%);">
-                                <span class="project-initial">D</span>
+                                <span class="project-initial" aria-hidden="true">D</span>
                             </div>
                             <div class="project-overlay">
-                                <span class="project-view">View Project</span>
+                                <button class="project-view open-modal-btn"
+                                    aria-label="View Data Entry Portfolio details">View Project</button>
                             </div>
                         </div>
                         <div class="project-details">
                             <h3>Data Entry Portfolio</h3>
                             <p>A curated collection of data management, spreadsheet automation, and office workflow
                                 projects.</p>
-                            <a href="#" class="project-link magnetic">Explore</a>
+                            <button class="project-link magnetic open-modal-btn"
+                                aria-label="Explore Data Entry Portfolio">Explore</button>
                         </div>
                     </div>
-                    <div class="project-card" data-tilt data-reveal="up">
+                    <div class="project-card" data-tilt data-reveal="up"
+                        data-project-title="Python Learning Notes"
+                        data-project-desc="Scripts, exercises, and small applications built while learning Python programming. Includes beginner algorithms, file I/O experiments, and small automation tools."
+                        data-project-tags="Python,Programming,Algorithms,Automation,Scripting"
+                        data-project-color="linear-gradient(135deg, #4A5D54 0%, #8B9D93 100%)"
+                        data-project-initial="P"
+                        data-project-demo="">
                         <div class="project-visual">
                             <div class="project-bg"
                                 style="background: linear-gradient(135deg, #4A5D54 0%, #8B9D93 100%);">
-                                <span class="project-initial">P</span>
+                                <span class="project-initial" aria-hidden="true">P</span>
                             </div>
                             <div class="project-overlay">
-                                <span class="project-view">View Project</span>
+                                <button class="project-view open-modal-btn"
+                                    aria-label="View Python Learning Notes details">View Project</button>
                             </div>
                         </div>
                         <div class="project-details">
                             <h3>Python Learning Notes</h3>
                             <p>Scripts, exercises, and small applications built while learning Python programming.</p>
-                            <a href="#" class="project-link magnetic">Explore</a>
+                            <button class="project-link magnetic open-modal-btn"
+                                aria-label="Explore Python Learning Notes">Explore</button>
                         </div>
                     </div>
-                    <div class="project-card" data-tilt data-reveal="up">
+                    <div class="project-card" data-tilt data-reveal="up"
+                        data-project-title="Security Research"
+                        data-project-desc="Documentation and experiments in foundational Cyber Security concepts and tools. Covers network basics, common attack vectors, and defensive techniques studied during coursework."
+                        data-project-tags="Cyber Security,Networking,Research,Linux,Ethical Hacking"
+                        data-project-color="linear-gradient(135deg, #7A6B7D 0%, #B8A9BC 100%)"
+                        data-project-initial="S"
+                        data-project-demo="">
                         <div class="project-visual">
                             <div class="project-bg"
                                 style="background: linear-gradient(135deg, #7A6B7D 0%, #B8A9BC 100%);">
-                                <span class="project-initial">S</span>
+                                <span class="project-initial" aria-hidden="true">S</span>
                             </div>
                             <div class="project-overlay">
-                                <span class="project-view">View Project</span>
+                                <button class="project-view open-modal-btn"
+                                    aria-label="View Security Research details">View Project</button>
                             </div>
                         </div>
                         <div class="project-details">
                             <h3>Security Research</h3>
                             <p>Documentation and experiments in foundational Cyber Security concepts and tools.</p>
-                            <a href="#" class="project-link magnetic">Explore</a>
+                            <button class="project-link magnetic open-modal-btn"
+                                aria-label="Explore Security Research">Explore</button>
                         </div>
                     </div>
                 </div>

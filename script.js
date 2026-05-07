@@ -10,6 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================================
+    // PREFERS-REDUCED-MOTION: pause SVG animations
+    // ============================================
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const heroSvg = document.querySelector('.hero-svg-bg');
+        if (heroSvg && typeof heroSvg.pauseAnimations === 'function') {
+            heroSvg.pauseAnimations();
+        }
+    }
+
+    // ============================================
     // CUSTOM CURSOR SYSTEM
     // ============================================
     const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
@@ -704,20 +714,175 @@ document.addEventListener('DOMContentLoaded', () => {
     // DROPDOWN KEYBOARD ACCESSIBILITY
     // ============================================
     const dropdown = document.querySelector('.dropdown');
-    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownToggle = document.querySelector('.unique-menu-btn');
+    const dropdownMenu = document.getElementById('dropdown-menu-list');
 
-    if (dropdownToggle) {
+    if (dropdownToggle && dropdown) {
+        dropdownToggle.addEventListener('click', () => {
+            const isOpen = dropdown.classList.toggle('open');
+            dropdownToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (isOpen && dropdownMenu) {
+                const firstItem = dropdownMenu.querySelector('.dropdown-item');
+                if (firstItem) firstItem.focus();
+            }
+        });
+
         dropdownToggle.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                dropdown.classList.toggle('open');
+                dropdownToggle.click();
             }
         });
 
+        // Close on outside click
         document.addEventListener('click', (e) => {
             if (!dropdown.contains(e.target)) {
                 dropdown.classList.remove('open');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
             }
         });
+
+        // Arrow key navigation in dropdown
+        if (dropdownMenu) {
+            const items = dropdownMenu.querySelectorAll('.dropdown-item');
+            items.forEach((item, idx) => {
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const next = items[idx + 1] || items[0];
+                        next.focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prev = items[idx - 1] || items[items.length - 1];
+                        prev.focus();
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.remove('open');
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
+                        dropdownToggle.focus();
+                    }
+                });
+            });
+        }
+    }
+
+    // ============================================
+    // PROJECT MODAL
+    // ============================================
+    const projectModal = document.getElementById('project-modal');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalTags = document.getElementById('modal-tags');
+    const modalVisualBg = document.getElementById('modal-visual-bg');
+    const modalVisualInitial = document.getElementById('modal-visual-initial');
+    const modalDemoBtn = document.getElementById('modal-demo-btn');
+
+    let modalOpener = null; // Element that triggered the modal (for focus return)
+
+    function openProjectModal(card) {
+        if (!projectModal) return;
+        const title = card.dataset.projectTitle || '';
+        const desc = card.dataset.projectDesc || '';
+        const tags = (card.dataset.projectTags || '').split(',').map(t => t.trim()).filter(Boolean);
+        const color = card.dataset.projectColor || 'var(--accent-terracotta)';
+        const initial = card.dataset.projectInitial || '?';
+        const demo = card.dataset.projectDemo || '#';
+
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalDesc) modalDesc.textContent = desc;
+        if (modalVisualBg) modalVisualBg.style.background = color;
+        if (modalVisualInitial) modalVisualInitial.textContent = initial;
+        if (modalDemoBtn) {
+            modalDemoBtn.href = demo;
+            // Hide demo button when no live URL is available
+            if (!demo) {
+                modalDemoBtn.setAttribute('hidden', '');
+            } else {
+                modalDemoBtn.removeAttribute('hidden');
+            }
+        }
+        if (modalTags) {
+            modalTags.innerHTML = '';
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'modal-tag';
+                span.textContent = tag;
+                modalTags.appendChild(span);
+            });
+        }
+
+        projectModal.classList.add('is-open');
+        projectModal.removeAttribute('aria-hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Move focus into modal
+        setTimeout(() => {
+            if (modalCloseBtn) modalCloseBtn.focus();
+        }, 50);
+    }
+
+    function closeProjectModal() {
+        if (!projectModal) return;
+        projectModal.classList.remove('is-open');
+        projectModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+
+        // Return focus to the element that opened the modal
+        if (modalOpener) {
+            modalOpener.focus();
+            modalOpener = null;
+        }
+    }
+
+    // Focus trap inside modal
+    function trapFocus(e) {
+        if (!projectModal || !projectModal.classList.contains('is-open')) return;
+        const focusable = projectModal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.key === 'Tab') {
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        } else if (e.key === 'Escape') {
+            closeProjectModal();
+        }
+    }
+
+    document.addEventListener('keydown', trapFocus);
+
+    // Open modal when any open-modal-btn is clicked
+    document.querySelectorAll('.open-modal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const card = btn.closest('.project-card');
+            if (card) {
+                modalOpener = btn;
+                openProjectModal(card);
+            }
+        });
+    });
+
+    // Close modal on backdrop click
+    if (projectModal) {
+        projectModal.addEventListener('click', (e) => {
+            if (e.target === projectModal) closeProjectModal();
+        });
+    }
+
+    // Close button
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeProjectModal);
     }
 });
