@@ -1,0 +1,21 @@
+- [ ] Navbar links navigate to all routes and active state updates correctly
+- [ ] Mobile menu opens/closes and remains keyboard accessible
+- [ ] Home hero CTAs navigate correctly
+- [ ] Dynamic stats match data module counts
+- [ ] Projects list/filter works and each action is functional or marked unavailable
+- [ ] Project detail route works for valid and invalid slugs
+- [ ] Apps list/detail works with download availability states
+- [ ] Blog search/category filter/load-more works
+- [ ] Blog detail includes TOC, share action, and related posts
+- [ ] Lab statuses render correctly (Completed/In Progress/Experimental/Abandoned)
+- [ ] Learning timeline and goals render correctly
+- [ ] Resources search/filter works and unavailable links are explicit
+- [ ] Contact form validates all fields and reports endpoint availability truthfully
+- [ ] Privacy and Terms routes are reachable
+- [ ] Admin route enforces locked state before login
+- [ ] Admin login/logout flow works in demo mode
+- [ ] Admin screens show loading/empty/error messaging
+- [ ] Theme toggle persists and system preference fallback works
+- [ ] No horizontal scrolling at 360px, 390px, 430px
+- [ ] Loader/cursor/canvas/slideshow/terminal/modal/clock operate without console errors
+- [ ] robots.txt and sitemap.xml are present and valid for static deploy
