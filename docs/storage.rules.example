@@ -1,0 +1,45 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.role == 'admin';
+    }
+
+    function isAllowedImage() {
+      return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    function isAllowedDownload() {
+      return request.resource.size < 30 * 1024 * 1024;
+    }
+
+    match /profile/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isAllowedImage();
+    }
+
+    match /projects/{projectSlug}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isAllowedImage();
+    }
+
+    match /apps/{appSlug}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isAllowedImage();
+    }
+
+    match /posts/{postSlug}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isAllowedImage();
+    }
+
+    match /downloads/{kind}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isAllowedDownload();
+    }
+  }
+}

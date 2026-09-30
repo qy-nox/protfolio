@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qy-nox.github.io/protfolio/sitemap.xml
